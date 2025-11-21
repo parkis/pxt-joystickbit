@@ -65,7 +65,7 @@ namespace joystickbit {
     //% blockId=onButtonEvent block="on button %button|is %event" blockExternalInputs=false
     export function onButtonEvent(button: JoystickBitPin, event: ButtonType, handler: Action): void {
         let state = getButton(button);
-        basic.pause(15);
+        basic.pause(25);
         if (state != getButton(button)) {
             return;
         } else {
