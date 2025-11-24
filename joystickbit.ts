@@ -68,17 +68,16 @@ namespace joystickbit {
 
 
     let cb_arr: Action[] = [null, null, null, null, null, null, null, null];
-    let flag = false;
+
     let btn_scantime_value = 20;
     let btn_Scantime: number[] = [btn_scantime_value, btn_scantime_value, btn_scantime_value, btn_scantime_value];
 
-
-    export enum ButtonBt {
-        P_12,
-        P_13,
-        P_14,
-        P_15
-    }
+    const BUTTON_PINS: JoystickBitPin[] = [
+        JoystickBitPin.P12,
+        JoystickBitPin.P13,
+        JoystickBitPin.P14,
+        JoystickBitPin.P15
+    ];
 
     /**
     * Registers code to run when a joystick:bit event is detected.
