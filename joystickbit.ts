@@ -123,7 +123,8 @@ namespace joystickbit {
                 }
                 break;
         }
-        // let index = (button * 2 + event);
+        // let index = (button * 2 + event);/
+        
         cb_arr[index] = handler;
         if (!button_firstflag) {
             button_firstflag = true;
