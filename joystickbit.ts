@@ -139,21 +139,21 @@ namespace joystickbit {
                     for (let i = 0; i < ButtonBt.button_num - 1; i++) {//判断是否按下，共4个按键0~3,循环中轮询判断按键状态，按下：使得按键计次(btn_Scantime)-1 跳出，下次进入则计次再-1，直到计次==0，则执行回调  else(没按)：跳出
                         // if (cb_arr[1] != null) {
 
-                        index_ = i;
+
                         //判断按键是否按下
                         if (getButton(ButtonPinArr[i])) {
                             if (!(--btn_Scantime[i])) {
                                 if (cb_arr[i * 2 + 1] != null) {
-                                    cb_arr[index_ * 2 + 1]();
-                                    btn_Scantime[index_] = btn_scantime_value;
-                                    // pins.onPulsed(ButtonPinArr[i], PulseValue.High, cb_arr[index_ * 2 + 1]);
+                                    cb_arr[i * 2 + 1]();
+                                    btn_Scantime[i] = btn_scantime_value;
+                                    // pins.onPulsed(ButtonPinArr[i], PulseValue.High, cb_arr[i * 2 + 1]);
                                 }
                                 //松开
-                                // while (getButton(ButtonPinArr[index_])) {
+                                // while (getButton(ButtonPinArr[i])) {
                                 // }
-                                // if (cb_arr[index_ * 2 + 0] != null) {
+                                // if (cb_arr[i * 2 + 0] != null) {
                                 //     {
-                                //         cb_arr[index_ * 2 + 0]();
+                                //         cb_arr[i * 2 + 0]();
                                 //     }
                                 //     return;
                                 // }
