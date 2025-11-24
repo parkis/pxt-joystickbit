@@ -149,14 +149,14 @@ namespace joystickbit {
                                     pins.onPulsed(ButtonPinArr[i], PulseValue.High, cb_arr[index_ * 2 + 1]);
                                 }
                                 //松开
-                                while (getButton(ButtonPinArr[index_])) {
-                                }
-                                if (cb_arr[index_ * 2 + 0] != null) {
-                                    {
-                                        cb_arr[index_ * 2 + 0]();
-                                    }
-                                    return;
-                                }
+                                // while (getButton(ButtonPinArr[index_])) {
+                                // }
+                                // if (cb_arr[index_ * 2 + 0] != null) {
+                                //     {
+                                //         cb_arr[index_ * 2 + 0]();
+                                //     }
+                                //     return;
+                                // }
 
                             } else {
                                 btn_Scantime[i] = btn_scantime_value;
