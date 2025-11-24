@@ -92,34 +92,34 @@ namespace joystickbit {
         switch (button) {
             case JoystickBitPin.P12:
                 if (event == ButtonType.down) {
-                    index = 0*2 + ButtonBt.P_12;
+                    index = 0 * 2 + 0;
                 }
                 else {
-                    index = 0*2 + ButtonBt.P_12 + 1;
+                    index = 0 * 2 + 1;
                 }
                 break;
             case JoystickBitPin.P13:
                 if (event == ButtonType.down) {
-                    index = 1*2 + ButtonBt.P_13;
+                    index = 1 * 2 + 0;
                 }
                 else {
-                    index = 1*2 + ButtonBt.P_13 + 1;
+                    index = 1 * 2 + 1;
                 }
                 break;
             case JoystickBitPin.P14:
                 if (event == ButtonType.down) {
-                    index = 2*2 + ButtonBt.P_14;
+                    index = 2 * 2 + 0;
                 }
                 else {
-                    index = 2*2 + ButtonBt.P_14 + 1;
+                    index = 2 * 2 + 1;
                 }
                 break;
             case JoystickBitPin.P15:
                 if (event == ButtonType.down) {
-                    index = 3*2 + ButtonBt.P_15;
+                    index = 3 * 2 + 0;
                 }
                 else {
-                    index = 3*2 + ButtonBt.P_15 + 1;
+                    index = 3 * 2 + 1;
                 }
                 break;
         }
@@ -141,8 +141,8 @@ namespace joystickbit {
                         //判断按键是否按下
                         if (getButton(ButtonPinArr[i])) {
                             if (!(--btn_Scantime[i])) {
-                                if (cb_arr[i*2+1] != null) {
-                                    cb_arr[i*2+1]();
+                                if (cb_arr[i * 2 + 1] != null) {
+                                    cb_arr[i * 2 + 1]();
                                     btn_Scantime[i] = btn_scantime_value;
                                 }
                             }
