@@ -58,16 +58,8 @@ namespace joystickbit {
     export function getButton(button: JoystickBitPin): boolean {
         return (pins.digitalReadPin(<number>button) == 0 ? true : false)
     }
-
-
-
-    let cb_arr: Action[] = [null, null, null, null, null, null, null, null];
     let button_firstflag = false;
-    let btn_scantime_value = 2;
-    let index_ = 0;
-    let btn_Scantime: number[] = [btn_scantime_value, btn_scantime_value, btn_scantime_value, btn_scantime_value];
-
-
+    let btn_status_arr = [0, 0, 0, 0];
     export enum ButtonBt {
         P_12,
         P_13,
@@ -76,94 +68,54 @@ namespace joystickbit {
         button_num
     }
 
-    //创建一个数组，把JoystickBitPin枚举中所有的pin放进去
-    let ButtonPinArr: number[] = [DAL.MICROBIT_ID_IO_P12, DAL.MICROBIT_ID_IO_P13, DAL.MICROBIT_ID_IO_P14, DAL.MICROBIT_ID_IO_P15];
 
 
-
+    const ButtonPinArr: number[] = [DAL.MICROBIT_ID_IO_P12, DAL.MICROBIT_ID_IO_P13, DAL.MICROBIT_ID_IO_P14, DAL.MICROBIT_ID_IO_P15];
+    const ButtonPinsourceArr: number[] = [0, 0, 0, 0, 0, 0, 0, 0];
     /**
     * Registers code to run when a joystick:bit event is detected.
     */
     //% blockId=onButtonEvent block="on button %button|is %event" blockExternalInputs=false
     export function onButtonEvent(button: JoystickBitPin, event: ButtonType, handler: Action): void {
+        const arr_btn = [JoystickBitPin.P12, JoystickBitPin.P13, JoystickBitPin.P14, JoystickBitPin.P15];
 
-        //这里的index为函数事件下标，我的event只有按下和未按下状态，所以button处乘以2，此时cb_arr数组会注册进去进入onbuttonevent函数的参数的按键和事件，cb_arr的对应位就被赋值(注册)了
-        let index = 0;
-        switch (button) {
-            case JoystickBitPin.P12:
-                if (event == ButtonType.up) {
-                    index = 0 * 2 + 0;
-                }
-                else {
-                    index = 0 * 2 + 1;
-                }
+        for (let i = 0; i < 4; i++) {
+            if (arr_btn[i] == button) {
+                let index_ = i * 2 + (event == ButtonType.down ? 0 : 1);
+                ButtonPinsourceArr[index_] = index_ + 0x9F;
+                control.onEvent(ButtonPinsourceArr[index_], ButtonPinsourceArr[index_], handler);
                 break;
-            case JoystickBitPin.P13:
-                if (event == ButtonType.up) {
-                    index = 1 * 2 + 0;
-                }
-                else {
-                    index = 1 * 2 + 1;
-                }
-                break;
-            case JoystickBitPin.P14:
-                if (event == ButtonType.up) {
-                    index = 2 * 2 + 0;
-                }
-                else {
-                    index = 2 * 2 + 1;
-                }
-                break;
-            case JoystickBitPin.P15:
-                if (event == ButtonType.up) {
-                    index = 3 * 2 + 0;
-                }
-                else {
-                    index = 3 * 2 + 1;
-                }
-                break;
+
+            }
         }
-        // let index = (button * 2 + event);/
 
-        cb_arr[index] = handler;
         if (!button_firstflag) {
             button_firstflag = true;
             control.inBackground(function () {
                 while (true) {
 
-                    //1. 判断所有按键状态，是否是按下
-
-                    // 后台处理按键状态更新 1. 获取已注册的按键状态 2. 定时扫描按键状态变化 3. 触发事件处理程序
-
-                    //循环判断按键是否按下--已按下则根据是否注册 决定是否触发callback 2. 触发事件处理程序
-                    for (let i = 0; i < ButtonBt.button_num - 1; i++) {//判断是否按下，共4个按键0~3,循环中轮询判断按键状态，按下：使得按键计次(btn_Scantime)-1 跳出，下次进入则计次再-1，直到计次==0，则执行回调  else(没按)：跳出
-                        // if (cb_arr[1] != null) {
-                        //判断按键是否按下
-                        if (getButton(ButtonPinArr[i])) {
-                            if (!(--btn_Scantime[i])) {
-                                if (cb_arr[i * 2 + 1] != null) {
-                                    cb_arr[i * 2 + 1]();
-                                    btn_Scantime[i] = btn_scantime_value;
-                                    // pins.onPulsed(ButtonPinArr[i], PulseValue.High, cb_arr[i * 2 + 1]);
+                    for (let i = 0; i < ButtonBt.button_num; i++) {
+                        let ret = getButton(ButtonPinArr[i]);
+                        if (ret) {
+                            if (btn_status_arr[i] != 3) {
+                                btn_status_arr[i]++;
+                                if (btn_status_arr[i] == 3) {
+                                    let event = i * 2 + 0 + 0x9F;
+                                    control.raiseEvent(event, event);
                                 }
                             }
                         } else {
-                            btn_Scantime[i] = btn_scantime_value;
+                            if (btn_status_arr[i] == 3) {
+                                let event = i * 2 + 1 + 0x9F;
+                                control.raiseEvent(event, event);
+                            }
+                            btn_status_arr[i] = 0;
                         }
                     }
                     basic.pause(10);
                 }
             })
         }
-
-
-        //     let state = getButton(button);
-        //     basic.pause(25);
-        //     if (state != getButton(button)) {
-        //         return;
-        //     } else {
-        //         pins.onPulsed(<number>button, <number>event, handler);
-        //     }
     }
 
 
