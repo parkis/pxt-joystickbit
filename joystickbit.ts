@@ -146,7 +146,7 @@ namespace joystickbit {
                                     control.inBackground(function () {
                                         cb_arr[i * 2 + 1]();
                                         btn_Scantime[i] = btn_scantime_value;
-                                })
+                                    })
                                 }
                                 control.inBackground(function () {
                                     //松开
@@ -167,9 +167,8 @@ namespace joystickbit {
                         }
                         basic.pause(10);
                     }
-                })
-
-            }
+                }
+            })
         }
 
 
