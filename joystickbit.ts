@@ -141,8 +141,8 @@ namespace joystickbit {
                         //判断按键是否按下
                         if (getButton(ButtonPinArr[i])) {
                             if (!(--btn_Scantime[i])) {
-                                if (cb_arr[index] != null) {
-                                    cb_arr[index]();
+                                if (cb_arr[i*2+1] != null) {
+                                    cb_arr[i*2+1]();
                                     btn_Scantime[i] = btn_scantime_value;
                                 }
                             }
