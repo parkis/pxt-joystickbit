@@ -10,6 +10,8 @@
 //% weight=0 color=#0fbc11  icon="\uf11b" block="Joystickbit"
 namespace joystickbit {
 
+
+
     export enum JoystickBitPin {
         //% block="C"
         P12 = DAL.MICROBIT_ID_IO_P12,
@@ -56,16 +58,66 @@ namespace joystickbit {
     export function getButton(button: JoystickBitPin): boolean {
         return (pins.digitalReadPin(<number>button) == 0 ? true : false)
     }
+    let button_firstflag = false;
+    let btn_status_arr = [0, 0, 0, 0];
+    export enum ButtonBt {
+        P_12,
+        P_13,
+        P_14,
+        P_15,
+        button_num
+    }
 
 
 
+    const ButtonPinArr: number[] = [DAL.MICROBIT_ID_IO_P12, DAL.MICROBIT_ID_IO_P13, DAL.MICROBIT_ID_IO_P14, DAL.MICROBIT_ID_IO_P15];
+    const ButtonPinsourceArr: number[] = [0, 0, 0, 0, 0, 0, 0, 0];
     /**
     * Registers code to run when a joystick:bit event is detected.
     */
     //% blockId=onButtonEvent block="on button %button|is %event" blockExternalInputs=false
     export function onButtonEvent(button: JoystickBitPin, event: ButtonType, handler: Action): void {
-        pins.onPulsed(<number>button, <number>event, handler);
+        const arr_btn = [JoystickBitPin.P12, JoystickBitPin.P13, JoystickBitPin.P14, JoystickBitPin.P15];
+
+        for (let i = 0; i < 4; i++) {
+            if (arr_btn[i] == button) {
+                let index_ = i * 2 + (event == ButtonType.down ? 0 : 1);
+                ButtonPinsourceArr[index_] = index_ + 0x9F;
+                control.onEvent(ButtonPinsourceArr[index_], ButtonPinsourceArr[index_], handler);
+                break;
+
+            }
+        }
+
+        if (!button_firstflag) {
+            button_firstflag = true;
+            control.inBackground(function () {
+                while (true) {
+
+                    for (let i = 0; i < ButtonBt.button_num; i++) {
+                        let ret = getButton(ButtonPinArr[i]);
+                        if (ret) {
+                            if (btn_status_arr[i] != 3) {
+                                btn_status_arr[i]++;
+                                if (btn_status_arr[i] == 3) {
+                                    let event = i * 2 + 0 + 0x9F;
+                                    control.raiseEvent(event, event);
+                                }
+                            }
+                        } else {
+                            if (btn_status_arr[i] == 3) {
+                                let event = i * 2 + 1 + 0x9F;
+                                control.raiseEvent(event, event);
+                            }
+                            btn_status_arr[i] = 0;
+                        }
+                    }
+                    basic.pause(10);
+                }
+            })
+        }
     }
+
 
 
 
