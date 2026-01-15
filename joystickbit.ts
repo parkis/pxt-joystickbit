@@ -10,17 +10,17 @@
 //% weight=0 color=#0fbc11  icon="\uf11b" block="Joystickbit"
 namespace joystickbit {
 
-
-
     export enum JoystickBitPin {
-        //% block="C"
-        P12 = DAL.MICROBIT_ID_IO_P12,
-        //% block="D"
+        //% block="B1"
         P13 = DAL.MICROBIT_ID_IO_P13,
-        //% block="E"
+        //% block="B2"
         P14 = DAL.MICROBIT_ID_IO_P14,
-        //% block="F"
-        P15 = DAL.MICROBIT_ID_IO_P15
+        //% block="B3"
+        P15 = DAL.MICROBIT_ID_IO_P15,
+        //% block="B4"
+        P16 = DAL.MICROBIT_ID_IO_P16,
+        //% block="rocker"
+        P8 = DAL.MICROBIT_ID_IO_P8
     }
 
     export enum rockerType {
@@ -43,12 +43,13 @@ namespace joystickbit {
     */
     //% blockId=initJoystickBit block="initialization joystick:bit"
     export function initJoystickBit(): void {
-        pins.digitalWritePin(DigitalPin.P0, 0)
-        pins.setPull(DigitalPin.P12, PinPullMode.PullUp)
+        pins.digitalWritePin(DigitalPin.P0, 1)
         pins.setPull(DigitalPin.P13, PinPullMode.PullUp)
         pins.setPull(DigitalPin.P14, PinPullMode.PullUp)
         pins.setPull(DigitalPin.P15, PinPullMode.PullUp)
-        pins.digitalWritePin(DigitalPin.P16, 1)
+        pins.setPull(DigitalPin.P16, PinPullMode.PullUp)
+        pins.setPull(DigitalPin.P8, PinPullMode.PullUp)
+        //pins.digitalWritePin(DigitalPin.P16, 1)
     }
 
     /**
@@ -59,27 +60,28 @@ namespace joystickbit {
         return (pins.digitalReadPin(<number>button) == 0 ? true : false)
     }
     let button_firstflag = false;
-    let btn_status_arr = [0, 0, 0, 0];
+    let btn_status_arr = [0, 0, 0, 0, 0];
     export enum ButtonBt {
-        P_12,
         P_13,
         P_14,
         P_15,
+        P_16,
+        P_8,
         button_num
     }
 
 
 
-    const ButtonPinArr: number[] = [DAL.MICROBIT_ID_IO_P12, DAL.MICROBIT_ID_IO_P13, DAL.MICROBIT_ID_IO_P14, DAL.MICROBIT_ID_IO_P15];
-    const ButtonPinsourceArr: number[] = [0, 0, 0, 0, 0, 0, 0, 0];
+    const ButtonPinArr: number[] = [DAL.MICROBIT_ID_IO_P13, DAL.MICROBIT_ID_IO_P14, DAL.MICROBIT_ID_IO_P15, DAL.MICROBIT_ID_IO_P16, DAL.MICROBIT_ID_IO_P8];
+    const ButtonPinsourceArr: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     /**
     * Registers code to run when a joystick:bit event is detected.
     */
     //% blockId=onButtonEvent block="on button %button|is %event" blockExternalInputs=false
     export function onButtonEvent(button: JoystickBitPin, event: ButtonType, handler: Action): void {
-        const arr_btn = [JoystickBitPin.P12, JoystickBitPin.P13, JoystickBitPin.P14, JoystickBitPin.P15];
+        const arr_btn = [JoystickBitPin.P13, JoystickBitPin.P14, JoystickBitPin.P15, JoystickBitPin.P16, JoystickBitPin.P8];
 
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 5; i++) {
             if (arr_btn[i] == button) {
                 let index_ = i * 2 + (event == ButtonType.down ? 0 : 1);
                 ButtonPinsourceArr[index_] = index_ + 0x9F;
