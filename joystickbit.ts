@@ -145,9 +145,9 @@ namespace joystickbit {
     */
     //% blockId=Vibration_Motor block="motor vibrate for %time ms"
     export function Vibration_Motor(time: number): void {
-        pins.digitalWritePin(DigitalPin.P16, 0)
+        pins.digitalWritePin(DigitalPin.P0, 0)
         basic.pause(time)
-        pins.digitalWritePin(DigitalPin.P16, 1)
+        pins.digitalWritePin(DigitalPin.P0, 1)
     }
 
 
